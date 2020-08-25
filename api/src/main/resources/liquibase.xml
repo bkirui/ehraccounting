@@ -1,39 +1,398 @@
 <?xml version="1.0" encoding="UTF-8"?>
  
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
+
+    <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
- 
-    <!--
-    	See http://wiki.openmrs.org/display/docs/Module+liquibase+File for 
-    	documentation on this file.
-    
-        See http://www.liquibase.org/manual/home#available_database_refactorings
-        for a list of supported elements and attributes
-    -->
- 
- 	<!-- Uncomment the changeset below if you want to make the Item class persistable, see also Item and EhraccountingDaoTest -->
- 	<!--
-	<changeSet id="ehraccounting-2016-08-02-12-21" author="raff">
-		<preConditions onFail="MARK_RAN">
-			<not><tableExists tableName="ehraccounting_item"/></not>
-		</preConditions>
-		<comment>
-			Creating the ehraccounting_item table
-		</comment>
-		<createTable tableName="ehraccounting_item">
-			<column name="ehraccounting_item_id" type="int" autoIncrement="true">
-				<constraints primaryKey="true" nullable="false"/>
-			</column>
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true"></constraints>
-			</column>
-			<column name="owner" type="int" />
-			<column name="description" type="varchar(255)" />
-		</createTable>
-        <addForeignKeyConstraint constraintName="ehraccounting_item_owner_fk" baseTableName="ehraccounting_item" baseColumnNames="owner"  referencedTableName="users"
-                                 referencedColumnNames="user_id" />
-    </changeSet> -->
- 
-</databaseChangeLog>
+
+        <!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+            for a list of supported elements and attributes -->
+        <changeSet author="ricky (generated)" id="1414957707040-1">
+            <createTable tableName="ehraccounting_account">
+                <column autoIncrement="true" name="account_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="name" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="description" type="VARCHAR(500)"/>
+                <column name="retired_date" type="datetime"/>
+                <column name="retired_by" type="INT(10)"/>
+                <column defaultValueNumeric="0" name="retired" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime"/>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="parrent_account_id" type="INT(10)"/>
+                <column name="account_type" type="VARCHAR(50)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="concept_id" type="INT(10)"/>
+                <column name="account_number" type="VARCHAR(50)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-2">
+            <createTable tableName="ehraccounting_account_txn">
+                <column autoIncrement="true" name="account_txn_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="account_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="balance" type="DECIMAL(19, 2)"/>
+                <column name="credit" type="DECIMAL(19, 2)"/>
+                <column name="debit" type="DECIMAL(19, 2)"/>
+                <column name="txn_type" type="VARCHAR(20)"/>
+                <column name="txn_date" type="datetime"/>
+                <column name="created_date" type="datetime"/>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)"/>
+                <column name="updated_date" type="datetime"/>
+                <column defaultValueNumeric="0" name="updated_by" type="INT(10)"/>
+                <column name="txn_number" type="VARCHAR(50)"/>
+                <column name="base_txn_number" type="VARCHAR(50)"/>
+                <column name="reference_txn" type="VARCHAR(50)"/>
+                <column name="cancel_for_txn" type="VARCHAR(50)"/>
+                <column name="txn_status" type="VARCHAR(10)"/>
+                <column name="amount" type="DECIMAL(19, 2)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-3">
+            <createTable tableName="ehraccounting_bank_statement">
+                <column autoIncrement="true" name="bank_statement_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="amount" type="DECIMAL(19, 2)"/>
+                <column name="check_number" type="VARCHAR(100)"/>
+                <column name="date_from" type="datetime"/>
+                <column name="date_to" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="voided_date" type="datetime"/>
+                <column name="voided_by" type="INT(10)"/>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="type" type="VARCHAR(50)"/>
+                <column defaultValueNumeric="0" name="voided" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="bank_account_id" type="INT(10)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1424957707041-3">
+            <createTable tableName="ehraccounting_bank_account">
+                <column autoIncrement="true" name="bank_account_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="account_name" type="VARCHAR(255)"/>
+                <column name="account_number" type="VARCHAR(255)"/>
+                <column name="bank_name" type="VARCHAR(255)"/>
+                <column name="bank_branch" type="VARCHAR(255)"/>
+                <column name="bank_code" type="VARCHAR(255)"/>
+                <column defaultValueNumeric="0" name="deleted" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+        </changeSet>
+
+        <changeSet author="ricky (generated)" id="1414957707040-4">
+            <createTable tableName="ehraccounting_budget">
+                <column autoIncrement="true" name="budget_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="name" type="VARCHAR(255)"/>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="retired_date" type="datetime"/>
+                <column name="retired_by" type="INT(10)"/>
+                <column defaultValueNumeric="0" name="retired" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-5">
+            <createTable tableName="ehraccounting_budget_item">
+                <column autoIncrement="true" name="budget_item_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="account_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="budget_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="amount" type="DECIMAL(19, 2)"/>
+                <column name="retired_date" type="datetime"/>
+                <column name="retired_by" type="INT(10)"/>
+                <column defaultValueNumeric="0" name="retired" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="txn_number" type="VARCHAR(50)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-6">
+            <createTable tableName="ehraccounting_expense_balance">
+                <column autoIncrement="true" name="expense_balance_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="account_id" type="INT(10)"/>
+                <column name="fiscal_period_id" type="INT(10)"/>
+                <column name="new_aie" type="DECIMAL(19, 2)"/>
+                <column name="cummulative_aie" type="DECIMAL(19, 2)"/>
+                <column name="current_payment" type="DECIMAL(19, 2)"/>
+                <column name="cummulative_payment" type="DECIMAL(19, 2)"/>
+                <column name="available_balance" type="DECIMAL(19, 2)"/>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="status" type="VARCHAR(50)"/>
+                <column name="total_committed" type="DECIMAL(19, 2)"/>
+                <column name="ledger_balance" type="DECIMAL(19, 2)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-7">
+            <createTable tableName="ehraccounting_fiscal_period">
+                <column autoIncrement="true" name="period_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="fiscal_year_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="name" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="status" type="VARCHAR(10)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-8">
+            <createTable tableName="ehraccounting_fiscal_year">
+                <column autoIncrement="true" name="year_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="name" type="VARCHAR(255)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="status" type="VARCHAR(10)"/>
+                <column name="opening_balance" type="DECIMAL(19, 2)"/>
+                <column name="closing_balance" type="DECIMAL(19, 2)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-9">
+            <createTable tableName="ehraccounting_income_balance">
+                <column autoIncrement="true" name="income_balance_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="account_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="fiscal_period_id" type="INT(10)"/>
+                <column name="start_date" type="datetime"/>
+                <column name="end_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="opening_balance" type="DECIMAL(19, 2)"/>
+                <column name="closing_balance" type="DECIMAL(19, 2)"/>
+                <column name="ledger_balance" type="DECIMAL(19, 2)"/>
+                <column name="available_balance" type="DECIMAL(19, 2)"/>
+                <column name="status" type="VARCHAR(10)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-10">
+            <createTable tableName="ehraccounting_income_receipt">
+                <column autoIncrement="true" name="income_receipt_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="receipt_no" type="VARCHAR(255)"/>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column defaultValueNumeric="0" name="voided" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="voided_date" type="datetime"/>
+                <column name="voided_by" type="INT(10)"/>
+                <column name="receipt_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_date" type="datetime"/>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="status" type="VARCHAR(50)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-11">
+            <createTable tableName="ehraccounting_income_receipt_item">
+                <column autoIncrement="true" name="income_receipt_item_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="account_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="income_receipt_id" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="amount" type="DECIMAL(19, 2)"/>
+                <column name="cheque_number" type="VARCHAR(255)"/>
+                <column name="type" type="VARCHAR(20)"/>
+                <column name="transaction_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column defaultValueNumeric="0" name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column defaultValueNumeric="0" name="voided" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="voided_date" type="datetime"/>
+                <column name="voided_by" type="INT(10)"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="txn_number" type="VARCHAR(50)"/>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-12">
+            <createTable tableName="ehraccounting_payee">
+                <column autoIncrement="true" name="payee_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="name" type="VARCHAR(255)"/>
+                <column name="description" type="VARCHAR(1000)"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="retired_by" type="INT(10)"/>
+                <column name="retired_date" type="datetime"/>
+                <column defaultValueNumeric="0" name="retired" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+            </createTable>
+        </changeSet>
+        <changeSet author="ricky (generated)" id="1414957707040-13">
+            <createTable tableName="ehraccounting_payment">
+                <column autoIncrement="true" name="payment_id" type="INT(10)">
+                    <constraints primaryKey="true"/>
+                </column>
+                <column name="account_id" type="INT(10)"/>
+                <column name="payee_id" type="INT(10)"/>
+                <column name="ref_order_no" type="VARCHAR(255)"/>
+                <column name="commitment_no" type="INT(10)"/>
+                <column name="voucher_no" type="VARCHAR(255)"/>
+                <column name="cost" type="DECIMAL(19, 2)"/>
+                <column name="commitment_amount" type="DECIMAL(19, 2)"/>
+                <column name="payable_amount" type="DECIMAL(19, 2)"/>
+                <column name="actual_payment" type="DECIMAL(19, 2)"/>
+                <column name="check_number" type="VARCHAR(100)"/>
+                <column name="payment_date" type="datetime"/>
+                <column name="updated_date" type="datetime"/>
+                <column name="created_date" type="datetime">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="created_by" type="INT(10)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="updated_by" type="INT(10)"/>
+                <column name="retired_by" type="INT(10)"/>
+                <column name="retired_date" type="datetime"/>
+                <column defaultValueNumeric="0" name="retired" type="BIT(1)">
+                    <constraints nullable="false"/>
+                </column>
+                <column name="status" type="VARCHAR(50)"/>
+                <column name="note" type="VARCHAR(1000)"/>
+                <column name="total_aie" type="DECIMAL(19, 2)"/>
+            </createTable>
+        </changeSet>
+
+        <changeSet author="Ricky" id="201411231147">
+            <addColumn tableName="ehraccounting_payment">
+                <column name="txn_number" type="VARCHAR(50)"/>
+            </addColumn>
+        </changeSet>
+
+        <changeSet author="Ricky" id="201503161251">
+            <addColumn tableName="ehraccounting_bank_statement">
+                <column name="receipt_type" type="VARCHAR(50)"/>
+            </addColumn>
+        </changeSet>
+
+    </databaseChangeLog>
