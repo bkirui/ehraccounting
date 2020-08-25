@@ -12,6 +12,8 @@ package org.openmrs.module.ehraccounting;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.BaseModuleActivator;
+import org.openmrs.module.ModuleActivator;
+import org.openmrs.module.ehraccounting.api.EhraccountingService;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
@@ -19,19 +21,49 @@ import org.openmrs.module.BaseModuleActivator;
 public class EhraccountingActivator extends BaseModuleActivator {
 	
 	private Log log = LogFactory.getLog(this.getClass());
-	
+
 	/**
-	 * @see #started()
+	 * @see ModuleActivator#willRefreshContext()
+	 */
+	public void willRefreshContext() {
+		log.info("Refreshing Ehraccounting Module");
+	}
+
+	/**
+	 * @see ModuleActivator#contextRefreshed()
+	 */
+	public void contextRefreshed() {
+		log.info("Ehraccounting Module refreshed");
+	}
+
+	/**
+	 * @see ModuleActivator#willStart()
+	 */
+	public void willStart() {
+		log.info("Starting Ehraccounting Module");
+	}
+
+	/**
+	 * @see ModuleActivator#started()
 	 */
 	public void started() {
-		log.info("Started Ehraccounting");
+		log.info("Ehraccounting Module started");
+		Context.getService(EhraccountingService.class).initModule();
 	}
-	
+
 	/**
-	 * @see #shutdown()
+	 * @see ModuleActivator#willStop()
 	 */
-	public void shutdown() {
-		log.info("Shutdown Ehraccounting");
+	public void willStop() {
+		log.info("Stopping Ehraccounting Module");
 	}
-	
+
+	/**
+	 * @see ModuleActivator#stopped()
+	 */
+	public void stopped() {
+		log.info("Ehraccounting Module stopped");
+	}
+
 }
+
